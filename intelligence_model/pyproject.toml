@@ -36,7 +36,7 @@ dev = [
 [tool.scikit-build]
 cmake.source-dir = "."
 cmake.build-type = "Release"
-wheel.packages = ["db", "schemas", "modules", "pipeline", "api"]
+wheel.packages = ["db", "schemas", "modules", "pipeline", "api", "numeric_core"]
 build.verbose = false
 logging.level = "INFO"
 

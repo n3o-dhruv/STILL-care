@@ -14,7 +14,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
 
-import still_core
+from numeric_core import still_core
 
 from db.repository import (
     get_session,

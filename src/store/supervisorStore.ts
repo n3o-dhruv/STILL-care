@@ -194,7 +194,7 @@ export const useSupervisorStore = create<SupervisorState>((set, get) => ({
         activePatientActions: [newAction, ...state.activePatientActions]
       }));
     } catch (error) {
-      console.error('Failed to send supportive message:', error);
+      throw error;
     }
   },
 

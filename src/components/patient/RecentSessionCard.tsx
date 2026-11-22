@@ -1,3 +1,4 @@
+import SessionArtifacts from '../SessionArtifacts';
 /**
  * STILL-care Recent Session Card
  *
@@ -115,6 +116,7 @@ export function RecentSessionCard({ session }: RecentSessionCardProps) {
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </Link>
       </div>
+      <SessionArtifacts id={session.id}/>
     </section>
   );
 }

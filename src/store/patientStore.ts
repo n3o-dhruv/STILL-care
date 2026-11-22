@@ -28,6 +28,7 @@ interface PatientState {
   supervisorActions: SupervisorActionRecord[];
   trendPoints: TrendPoint[];
   isLoading: boolean;
+  error: string | null;
   activeCheckInDraft: {
     mode: 'text' | 'voice';
     content: string;
@@ -52,13 +53,14 @@ export const usePatientStore = create<PatientState>((set, get) => ({
   supervisorActions: [],
   trendPoints: [],
   isLoading: false,
+  error: null,
   activeCheckInDraft: {
     mode: 'text',
     content: ''
   },
 
   loadPatientData: async (patientId = 'pat-1') => {
-    set({ isLoading: true });
+    set({ isLoading: true, error: null });
     try {
       const patient = await getCurrentPatient(patientId);
       const sessions = await getPatientSessions(patientId);
@@ -75,7 +77,7 @@ export const usePatientStore = create<PatientState>((set, get) => ({
       });
     } catch (error) {
       console.error('Failed to load patient data:', error);
-      set({ isLoading: false });
+      set({ isLoading: false, error: error instanceof Error ? error.message : 'Request failed' });
     }
   },
 
@@ -127,7 +129,7 @@ export const usePatientStore = create<PatientState>((set, get) => ({
 
     if (!currentPatient || !content.trim()) return null;
 
-    set({ isLoading: true });
+    set({ isLoading: true, error: null });
     try {
       const newSession = await createCheckIn({
         patientId: currentPatient.id,
@@ -149,7 +151,7 @@ export const usePatientStore = create<PatientState>((set, get) => ({
       return newSession;
     } catch (error) {
       console.error('Failed to submit check-in:', error);
-      set({ isLoading: false });
+      set({ isLoading: false, error: error instanceof Error ? error.message : 'Request failed' });
       return null;
     }
   },
@@ -166,7 +168,7 @@ export const usePatientStore = create<PatientState>((set, get) => ({
       });
       set((state) => ({ messages: [...state.messages, newMsg] }));
     } catch (error) {
-      console.error('Failed to send message:', error);
+      throw error;
     }
   },
 

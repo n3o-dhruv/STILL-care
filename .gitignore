@@ -48,3 +48,6 @@ checkpoints/
 logs/
 *.sqlite
 *.db
+
+# Authenticated local clinical store
+data/private/

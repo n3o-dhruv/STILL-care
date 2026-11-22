@@ -57,6 +57,10 @@ def notify_alertd(alert: Alert) -> bool:
         }
     ).encode("utf-8")
 
+    if not hasattr(socket, "AF_UNIX"):
+        logger.debug("notify_alertd: Unix sockets are unavailable on this platform")
+        return False
+
     try:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
             sock.settimeout(_SOCKET_TIMEOUT_SECONDS)

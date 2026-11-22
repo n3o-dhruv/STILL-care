@@ -5,7 +5,7 @@
  * Atmosphere: Calm, supportive, spacious, warm natural environment with soft botanical accents.
  *
  * Layout Structure:
- * 1. Hero: "Good morning, Ananya." with warm supportive phrasing & organic ambient backdrop.
+ * 1. Hero: "Good morning, Member." with warm supportive phrasing & organic ambient backdrop.
  * 2. Main Check-in Card: Prominent, beautifully framed check-in initiation with calming illustration & depth.
  * 3. Next Suggested Check-in bar.
  * 4. Compact 4-Card Navigation Grid with distinctive soft-pastel icon badges:
@@ -110,7 +110,7 @@ export default function PatientDashboardPage() {
     );
   }
 
-  const firstName = patient.name ? patient.name.split(' ')[0] : 'Ananya';
+  const firstName = patient.name ? patient.name.split(' ')[0] : 'Member';
   const recentSession = sessions.length > 0 ? sessions[0] : null;
 
   const getGreeting = () => {
@@ -250,7 +250,7 @@ export default function PatientDashboardPage() {
               Messages
             </span>
             <span className="text-[11px] text-charcoal-muted block pt-0.5">
-              Dr. Meera Iyer
+              Your consultant
             </span>
           </div>
           <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-forest" title="Unread note" />

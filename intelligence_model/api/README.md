@@ -1,5 +1,25 @@
 # api/ — FastAPI surface for Modules 11-17
 
+## Run locally on Windows
+
+From the repository root, after installing the monitoring dependencies into
+`.venv`, run:
+
+```powershell
+$env:PYTHONPATH = "$PWD\intelligence_model"
+.\.venv\Scripts\python.exe -m uvicorn api.main:app --host 127.0.0.1 --port 8002
+```
+
+Open `http://127.0.0.1:8002/docs`. If port 8002 is occupied, choose an
+available port. When Windows blocks the native `still_core` extension, the
+monitoring code falls back to its slower Python implementation. The optional
+Unix-socket alert relay is not required for stored alerts.
+
+This is the monitoring API, not the former `backend.app` web host. It expects
+an enclosing backend to supply authenticated supervisor identity: its
+protected endpoints return 401 when run alone. The current frontend is not
+wired to this API.
+
 ## Chatbot integration
 
 These endpoints use the existing supervisor identity dependency:

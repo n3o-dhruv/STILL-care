@@ -1,0 +1,10 @@
+import {useState} from 'react';
+import {Link} from 'react-router-dom';
+import {supabase,configurationError} from '../../lib/supabase';
+export default function AccountFlow({reset=false}:{reset?:boolean}) {
+ const [message,setMessage]=useState(''); const [busy,setBusy]=useState(false);
+ return <main className="min-h-screen bg-[#FAF8F5] flex items-center justify-center"><form className="bg-white rounded-3xl p-8 space-y-4 max-w-md w-full border" onSubmit={async e=>{e.preventDefault();setBusy(true);try{if(configurationError)throw new Error(configurationError);const f=new FormData(e.currentTarget);const password=String(f.get('password'));if(reset){const {error}=await supabase.auth.updateUser({password});if(error)throw error;await supabase.auth.signOut();setMessage('Password updated. Sign in again.');}else{const code=String(f.get('code')).trim(); const {error}=await supabase.auth.signUp({email:String(f.get('email')),password,options:{emailRedirectTo:window.location.origin+'/login',data:{full_name:String(f.get('name'))}}});if(error)throw error;localStorage.setItem('pendingConsultantId',code);setMessage('Registration request accepted. Verify your email, then sign in to submit the consultant request.');}}catch(e){setMessage(e instanceof Error?e.message:'Request failed');}finally{setBusy(false)}}}>
+ <h1 className="font-serif text-2xl">{reset?'Reset password':'Create member account'}</h1>
+ {!reset&&<><label>Full name<input name="name" required maxLength={160} className="border rounded-xl p-3 w-full"/></label><label>Email<input name="email" type="email" required className="border rounded-xl p-3 w-full"/></label><label>Consultant ID<input name="code" required className="border rounded-xl p-3 w-full"/></label></>}
+ <label>Password<input name="password" type="password" minLength={8} required className="border rounded-xl p-3 w-full"/></label><button disabled={busy} className="bg-forest text-white rounded-xl p-3">{busy?'Please wait?':reset?'Save password':'Register'}</button><p role="status">{message}</p><Link to="/login">Sign in</Link></form></main>;
+}

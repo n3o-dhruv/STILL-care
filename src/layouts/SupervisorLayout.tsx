@@ -153,7 +153,7 @@ export default function SupervisorLayout() {
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 text-xs text-charcoal/80 bg-bone/70 px-2.5 py-1 rounded border border-charcoal/10">
               <Stethoscope className="w-3.5 h-3.5 text-slate-teal" />
-              <span>Dr. Meera Iyer</span>
+              <span>Your consultant</span>
               <span className="text-[10px] bg-paper-grey text-charcoal/70 px-1.5 py-0.2 rounded font-medium border border-charcoal/10">
                 Counselor
               </span>

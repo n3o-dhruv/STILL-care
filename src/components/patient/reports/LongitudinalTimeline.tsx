@@ -37,7 +37,7 @@ export function LongitudinalTimeline({ sessions }: LongitudinalTimelineProps) {
   }
 
   // Map semantic levels for visual vertical positioning (0 = Stable, 1 = Monitoring, 2 = Increasing concern)
-  const getLevelY = (riskLevel: 'green' | 'yellow' | 'red') => {
+  const getLevelY = (riskLevel: 'green' | 'yellow' | 'red' | 'neutral') => {
     switch (riskLevel) {
       case 'green':
         return 20; // Stable near top
@@ -48,7 +48,7 @@ export function LongitudinalTimeline({ sessions }: LongitudinalTimelineProps) {
     }
   };
 
-  const getSemanticColor = (riskLevel: 'green' | 'yellow' | 'red') => {
+  const getSemanticColor = (riskLevel: 'green' | 'yellow' | 'red' | 'neutral') => {
     switch (riskLevel) {
       case 'green':
         return '#4C7A4A'; // moss

@@ -10,6 +10,7 @@ from whatever the pipeline actually stored if scoring logic changes.
 
 from __future__ import annotations
 
+import os
 import tempfile
 from pathlib import Path
 from typing import Optional
@@ -104,8 +105,14 @@ def get_pdf(session_id: str, background_tasks: BackgroundTasks,
     # Written to a temp file rather than held in memory as bytes --
     # generate_report()'s existing signature takes a path, and reusing it
     # unchanged avoids a second code path for PDF generation.
-    tmp_path = Path(tempfile.mkstemp(suffix=".pdf")[1])
-    generate_report(summary, str(tmp_path))
+    fd, name = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    tmp_path = Path(name)
+    try:
+        generate_report(summary, str(tmp_path))
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
     background_tasks.add_task(tmp_path.unlink, missing_ok=True)  # cleanup after response is sent
 
     return FileResponse(

@@ -8,8 +8,8 @@
  * - Privacy by design: supervisor never receives raw conversation transcripts by default
  */
 
-export type RiskLevel = 'green' | 'yellow' | 'red';
-export type DistressTrend = 'improving' | 'worsening';
+export type RiskLevel = 'green' | 'yellow' | 'red' | 'neutral';
+export type DistressTrend = 'improving' | 'worsening' | 'unknown';
 
 export interface Patient {
   id: string;
@@ -29,6 +29,7 @@ export interface Supervisor {
 }
 
 export interface CheckInSession {
+  distressScore?: number | null;
   id: string;
   patientId: string;
   date: string;

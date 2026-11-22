@@ -61,6 +61,7 @@ export default function SupervisorMessagesPage() {
 
   return (
     <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
+      <p role="status" className="border rounded-xl p-3">This workflow is not connected yet. Messages, appointments and recommendations cannot be sent from this screen.</p>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-charcoal/15 pb-4">
         <div>

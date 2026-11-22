@@ -98,7 +98,7 @@ export default function PatientLayout() {
               to="/patient/messages"
               className="relative p-2 text-charcoal/70 hover:text-charcoal hover:bg-paper-grey rounded-full transition-colors"
               aria-label="Notifications"
-              title="New message from Dr. Meera Iyer"
+              title="New message from Your consultant"
             >
               <svg
                 className="w-4 h-4"
@@ -120,12 +120,12 @@ export default function PatientLayout() {
             <Link
               to="/patient/profile"
               className="flex items-center gap-2 p-1 pr-2.5 rounded-full hover:bg-paper-grey transition-colors text-xs text-charcoal group"
-              aria-label="View Ananya's Profile"
+              aria-label="View Member's Profile"
             >
               <div className="w-7 h-7 rounded-full bg-sage text-forest flex items-center justify-center font-semibold text-xs border border-border-subtle group-hover:border-forest/40">
                 AS
               </div>
-              <span className="hidden sm:inline font-medium text-charcoal">Ananya</span>
+              <span className="hidden sm:inline font-medium text-charcoal">Member</span>
             </Link>
 
             {/* Mobile Menu Toggle Button */}

@@ -1,3 +1,5 @@
+import RequireAuth from './components/RequireAuth';
+import AccountFlow from './pages/auth/AccountFlow';
 /**
  * STILL-care Main Application & Route Configuration
  *
@@ -41,17 +43,17 @@ export default function App() {
   return (
     <BrowserRouter>
       {/* Floating Demo Perspective Switcher for Hackathon Judges */}
-      <JudgeDemoBar />
+      
 
       <Routes>
         {/* Default Landing: Redirect to Patient Dashboard */}
         <Route path="/" element={<Navigate to="/patient/dashboard" replace />} />
 
         {/* Unified Authentication Portal */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<AccountFlow />} /><Route path="/reset-password" element={<AccountFlow reset />} /><Route path="/auth/callback" element={<Navigate to="/patient/dashboard" replace />} /><Route path="/login" element={<LoginPage />} />
 
         {/* Patient Experience Routes */}
-        <Route path="/patient" element={<PatientLayout />}>
+        <Route path="/patient" element={<RequireAuth role="patient"><PatientLayout /></RequireAuth>}>
           <Route index element={<Navigate to="/patient/dashboard" replace />} />
           <Route path="login" element={<Navigate to="/login?role=student" replace />} />
           <Route path="dashboard" element={<PatientDashboardPage />} />
@@ -65,7 +67,7 @@ export default function App() {
         </Route>
 
         {/* Supervisor Experience Routes */}
-        <Route path="/supervisor" element={<SupervisorLayout />}>
+        <Route path="/supervisor" element={<RequireAuth role="consultant"><SupervisorLayout /></RequireAuth>}>
           <Route index element={<Navigate to="/supervisor/dashboard" replace />} />
           <Route path="dashboard" element={<SupervisorDashboardPage />} />
           <Route path="login" element={<Navigate to="/login?role=counselor" replace />} />

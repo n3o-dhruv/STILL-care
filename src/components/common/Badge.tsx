@@ -30,6 +30,7 @@ export function RiskBadge({
   className = ''
 }: RiskBadgeProps) {
   const styles: Record<RiskLevel, string> = {
+    neutral: 'bg-charcoal/10 text-charcoal border-charcoal/20',
     green: 'bg-risk-green/12 text-risk-green border-risk-green/25',
     yellow: 'bg-risk-amber/12 text-risk-amber border-risk-amber/25',
     red: 'bg-risk-red/12 text-risk-red border-risk-red/25'
@@ -37,7 +38,8 @@ export function RiskBadge({
 
   // Pure semantic language, no clinical diagnosis or numbers
   const defaultLabels: Record<RiskLevel, string> = {
-    green: 'Stable',
+    neutral: 'Not assessed',
+    green: 'Low distress',
     yellow: 'Monitoring',
     red: 'Increasing concern'
   };
@@ -52,7 +54,7 @@ export function RiskBadge({
             ? 'bg-risk-green'
             : level === 'yellow'
             ? 'bg-risk-amber'
-            : 'bg-risk-red'
+            : level === 'red' ? 'bg-risk-red' : 'bg-charcoal/40'
         }`}
         aria-hidden="true"
       />
@@ -81,6 +83,7 @@ export interface TrendBadgeProps {
 }
 
 export function TrendBadge({ trend, className = '' }: TrendBadgeProps) {
+  if(trend==='unknown')return <span className={className}>Trend not assessed</span>;
   const isImproving = trend === 'improving';
 
   return (

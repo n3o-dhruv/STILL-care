@@ -1,3 +1,4 @@
+import SessionArtifacts from '../../components/SessionArtifacts';
 /**
  * STILL-care Supervisor Patient Detail & Continuity View (/supervisor/patients/:id)
  *
@@ -96,6 +97,7 @@ export default function PatientDetailPage() {
 
   return (
     <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
+      {activePatientSessions.map(s=><details key={s.id}><summary>{s.date} ? View session</summary><SessionArtifacts id={s.id}/></details>)}
       {/* Wayfinding Top Bar */}
       <div className="flex items-center justify-between gap-4">
         <Link

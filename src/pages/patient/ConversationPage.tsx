@@ -28,7 +28,7 @@ export default function ConversationPage() {
   const initialPrompt = searchParams.get('prompt') || GENTLE_PROMPTS[0];
   const [selectedPrompt, setSelectedPrompt] = useState<string>(initialPrompt);
 
-  const { activeCheckInDraft, setDraftContent, submitCheckIn, isLoading } = usePatientStore();
+  const { activeCheckInDraft, setDraftContent, submitCheckIn, isLoading, error } = usePatientStore();
   const [content, setContent] = useState<string>(activeCheckInDraft.content || '');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittedSession, setSubmittedSession] = useState<CheckInSession | null>(null);
@@ -108,6 +108,7 @@ export default function ConversationPage() {
         </p>
       </div>
 
+      {error && <p role="alert" className="text-risk-red">{error}</p>}
       {/* Mode-specific Interface */}
       {activeMode === 'text' ? (
         <WrittenReflectionView

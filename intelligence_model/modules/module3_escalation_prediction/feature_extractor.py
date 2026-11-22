@@ -9,7 +9,7 @@ still_core.RiskInputs, the shared input shape both heuristic_model.py and
 
 from __future__ import annotations
 
-import still_core
+from numeric_core import still_core
 
 from db.repository import get_latest_distress_trend, get_session_summary_row, get_turns_for_session
 from .acute_keyword_detector import detect_acute_risk

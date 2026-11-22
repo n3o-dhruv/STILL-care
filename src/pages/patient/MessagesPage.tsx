@@ -93,6 +93,7 @@ export default function PatientMessagesPage() {
       id="patient-messages-page"
       className="max-w-4xl mx-auto space-y-6 font-sans animate-fade-in py-2"
     >
+      <p role="status" className="border rounded-xl p-3">This workflow is not connected yet. Messages, appointments and recommendations cannot be sent from this screen.</p>
       {/* Wayfinding Top Bar */}
       <div className="flex items-center justify-between gap-4 border-b border-charcoal/10 pb-4">
         <div className="space-y-1">

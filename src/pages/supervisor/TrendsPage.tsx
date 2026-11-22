@@ -46,6 +46,7 @@ import { TrendPoint, RiskLevel } from '../../types';
 
 // Numerical mapping purely for spatial plotting on Y axis
 const RISK_TO_VALUE: Record<RiskLevel, number> = {
+  neutral: NaN,
   green: 1,
   yellow: 2,
   red: 3

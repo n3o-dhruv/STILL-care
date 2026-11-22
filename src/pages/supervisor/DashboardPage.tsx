@@ -77,7 +77,7 @@ export default function SupervisorDashboardPage() {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-charcoal/70">
-            Welcome, Dr. Meera Iyer. Review prioritized members, recent longitudinal trajectory changes, and continuity actions.
+            Welcome, Your consultant. Review prioritized members, recent longitudinal trajectory changes, and continuity actions.
           </p>
         </div>
 

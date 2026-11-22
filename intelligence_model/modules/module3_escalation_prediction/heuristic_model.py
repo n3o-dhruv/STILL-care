@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import still_core
+from numeric_core import still_core
 
 from db.repository import insert_escalation_risk
 from schemas.schemas import ContributingFeature, EscalationRisk, RiskLevel

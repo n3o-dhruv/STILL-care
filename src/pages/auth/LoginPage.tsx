@@ -1,3 +1,4 @@
+import { supabase, profile, configurationError } from '../../lib/supabase';
 /**
  * STILL-care Authentication Portal (/login)
  *
@@ -36,12 +37,8 @@ export default function LoginPage() {
     roleParam === 'counselor' || roleParam === 'supervisor' ? 'counselor' : 'member';
   const [role, setRole] = useState<'member' | 'counselor'>(initialRole);
 
-  const [identifier, setIdentifier] = useState(
-    initialRole === 'counselor'
-      ? 'dr.meera.iyer@campus.edu'
-      : 'ananya.sharma@campus.edu'
-  );
-  const [password, setPassword] = useState('password123');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,55 +48,24 @@ export default function LoginPage() {
   const handleRoleChange = (newRole: 'member' | 'counselor') => {
     setRole(newRole);
     setErrorMessage(null);
-    if (newRole === 'member') {
-      setIdentifier('ananya.sharma@campus.edu');
-      setPassword('password123');
-    } else {
-      setIdentifier('dr.meera.iyer@campus.edu');
-      setPassword('counselorPass2026');
-    }
+    setPassword('');
   };
 
   const handleQuickFill = (targetRole: 'member' | 'counselor') => {
     handleRoleChange(targetRole);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-
-    if (!identifier.trim()) {
-      setErrorMessage(
-        role === 'member'
-          ? 'Please enter your member email or college ID.'
-          : 'Please enter your counselor email or counselor ID.'
-      );
-      return;
-    }
-
-    if (!password) {
-      setErrorMessage('Please enter your password.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simulated authentic authentication flow
-    setTimeout(() => {
-      setIsLoading(false);
-      if (role === 'member') {
-        setActiveRole('patient');
-        navigate('/patient/dashboard');
-      } else {
-        setActiveRole('supervisor');
-        navigate('/supervisor/dashboard');
-      }
-    }, 600);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); setErrorMessage(null); setIsLoading(true);
+    try {
+      if(configurationError) throw new Error(configurationError);
+      const {error}=await supabase.auth.signInWithPassword({email:identifier.trim(),password}); if(error)throw error;
+      const p=await profile();
+      if(role==='counselor') { const {data,error}=await supabase.from('consultants').select('verification_status').eq('user_id',p.user_id).single(); if(error || p.role!=='consultant' || data?.verification_status!=='approved') { await supabase.auth.signOut(); throw new Error('An approved consultant account is required.'); } }
+      if(role==='member' && p.role!=='patient') throw new Error('Use counselor login for this account.');
+      const code=localStorage.getItem('pendingConsultantId'); if(code && p.role==='patient'){ const {error}=await supabase.rpc('request_consultant',{code}); if(error)throw error; localStorage.removeItem('pendingConsultantId'); }
+      setActiveRole(p.role==='consultant'?'supervisor':'patient'); navigate(p.role==='consultant'?'/supervisor/dashboard':'/patient/dashboard');
+    } catch(e) {setErrorMessage(e instanceof Error?e.message:'Sign in failed');} finally {setIsLoading(false);}
   };
 
   return (
@@ -367,55 +333,7 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              {/* Quick Evaluator 1-Click Autofill */}
-              <div className="pt-2 border-t border-border-subtle/80 space-y-2.5">
-                <div className="flex items-center justify-between text-[11px] text-charcoal-muted">
-                  <span className="font-medium text-charcoal">Quick demo accounts:</span>
-                  <span className="text-[10px] bg-[#EAF1EC] px-2.5 py-0.5 rounded-full border border-forest/15 text-forest font-medium">
-                    1-click autofill
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    id="autofill-member-btn"
-                    onClick={() => handleQuickFill('member')}
-                    className={`p-2.5 rounded-xl border text-left transition-all text-xs cursor-pointer relative ${
-                      role === 'member'
-                        ? 'border-forest bg-[#FAFBF9] text-forest font-medium shadow-2xs'
-                        : 'border-border-subtle bg-[#FAF8F5] text-charcoal-muted hover:bg-[#F4F1EA]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-charcoal block">Ananya Sharma</span>
-                      {role === 'member' && <Check className="w-3.5 h-3.5 text-forest shrink-0" />}
-                    </div>
-                    <span className="text-[10px] text-charcoal-muted block mt-0.5">
-                      Member &middot; 3rd Year B.Tech
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    id="autofill-counselor-btn"
-                    onClick={() => handleQuickFill('counselor')}
-                    className={`p-2.5 rounded-xl border text-left transition-all text-xs cursor-pointer relative ${
-                      role === 'counselor'
-                        ? 'border-forest bg-[#FAFBF9] text-forest font-medium shadow-2xs'
-                        : 'border-border-subtle bg-[#FAF8F5] text-charcoal-muted hover:bg-[#F4F1EA]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-charcoal block">Dr. Meera Iyer</span>
-                      {role === 'counselor' && <Check className="w-3.5 h-3.5 text-forest shrink-0" />}
-                    </div>
-                    <span className="text-[10px] text-charcoal-muted block mt-0.5">
-                      Counselor &middot; Wellness Center
-                    </span>
-                  </button>
-                </div>
-              </div>
-
+              <Link to="/register" className="text-forest underline">Create a member account</Link>
               {/* Minimal Calm Footer Text */}
               <div className="pt-2 border-t border-border-subtle/50 text-center text-xs text-charcoal-muted/80">
                 <span>STILL-care &middot; A calmer space to reflect and stay connected</span>
@@ -444,11 +362,7 @@ export default function LoginPage() {
               </h3>
             </div>
 
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              Pre-configured profiles are available.
-              You can instantly sign in as either <strong className="text-charcoal">Ananya Sharma (Member)</strong> or{' '}
-              <strong className="text-charcoal">Dr. Meera Iyer (Counselor)</strong> using the 1-click quick sign-in buttons.
-            </p>
+            <form onSubmit={async e=>{e.preventDefault();const {error}=await supabase.auth.resetPasswordForEmail(identifier,{redirectTo:window.location.origin+'/reset-password'});setErrorMessage(error?error.message:'Recovery request accepted. Check your email.');setShowForgotModal(false);}}><label>Email<input type="email" required value={identifier} onChange={e=>setIdentifier(e.target.value)} className="border p-2 w-full" /></label><button type="submit" className="text-forest underline">Send recovery email</button></form>
 
             <div className="pt-2 flex justify-end">
               <button
